@@ -8,11 +8,22 @@ class WelcomeViewModel(
     private val userRepository: UserRepository
 ) :ViewModel() {
 
-    fun handleContinue() {
-
+    fun handleContinue(
+        email: String,
+        onNavigateToSignIn: (email: String) -> Unit,
+        onNavigateToSignUp: (email: String) -> Unit,
+    ) {
+        if (userRepository.isKnownUserEmail(email)) {
+            onNavigateToSignIn(email)
+        } else {
+            onNavigateToSignUp(email)
+        }
     }
-    fun signInAsGuest() {
-
+    fun signInAsGuest(
+        onSignInComplete: () -> Unit,
+    ) {
+        userRepository.signInAsGuest()
+        onSignInComplete()
     }
 }
 

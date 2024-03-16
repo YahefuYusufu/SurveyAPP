@@ -7,9 +7,14 @@ import com.example.jetsurvey.signinsignup.viewModel.WelcomeViewModelFactory
 
 @Composable
 fun WelcomeRoute(
-    onNavigateToSignIn: () -> Unit,
-    onNavigateToSignUp: () -> Unit,
+    onNavigateToSignIn: (email: String) -> Unit,
+    onNavigateToSignUp: (email: String) -> Unit,
     onSignInAsGuest: () -> Unit,
 ) {
     val welcomeViewModel: WelcomeViewModel = viewModel(factory = WelcomeViewModelFactory())
+
+    WelcomeScreen(
+        onSignInSignUp = {},
+        onSignInAsGuest = {}
+    )
 }
