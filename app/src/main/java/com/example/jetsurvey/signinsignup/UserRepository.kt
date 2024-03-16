@@ -33,7 +33,7 @@ import androidx.compose.runtime.Immutable
             _user = User.LoggedInUser(email)
         }
 
-        fun signAsGuest() {
+        fun signInAsGuest() {
             _user = User.GuestUser
         }
 
