@@ -25,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType.Companion.Email
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -54,7 +56,9 @@ fun WelcomeScreen(
             }
 
             SignInCreateAccount(
-
+                onSignInSignUp = onSignInSignUp,
+                onSignInAsGuest = onSignInAsGuest,
+                onFocusChange = {focused -> showBranding = !focused},
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp)
@@ -103,16 +107,16 @@ private fun Logo(
 
 @Composable
 private fun SignInCreateAccount(
-//    onSignInSignUp: (email: String) -> Unit,
-//    onSignInAsGuest: () -> Unit,
-//    onFocusChange: (Boolean) -> Unit,
+    onSignInSignUp: (email: String) -> Unit,
+    onSignInAsGuest: () -> Unit,
+    onFocusChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val emailState by rememberSaveable(stateSaver = EmailStateSaver) {
         mutableStateOf(EmailState())
     }
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
-        val stronglyDeemphasizedAlpha = 0.0f
+        val stronglyDeemphasizedAlpha = 1f
         Text(
             text = stringResource(id = R.string.sign_in_create_account),
             style = MaterialTheme.typography.bodyMedium,
@@ -120,16 +124,18 @@ private fun SignInCreateAccount(
             textAlign = TextAlign.Center,
             modifier = Modifier.padding(top = 64.dp, bottom = 12.dp)
         )
-//        val onSubmit = {
-//            if (emailState.isValid) {
-//                onSignInSignUp(emailState.text)
-//            } else {
-//                emailState.enableShowErrors()
-//            }
-//        }
-//        onFocusChange(emailState.isFocused)
+        val onSubmit = {
+            if (emailState.isValid) {
+                onSignInSignUp(emailState.text)
+            } else {
+                emailState.enableShowErrors()
+            }
+        }
+        onFocusChange(emailState.isFocused)
+        Email(emailState = emailState, imeAction = ImeAction.Done, onImeAction = onSubmit)
+
         Button(
-            onClick = {},
+            onClick = onSubmit,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 28.dp, bottom = 3.dp)
@@ -139,11 +145,24 @@ private fun SignInCreateAccount(
                 style = MaterialTheme.typography.titleSmall
             )
         }
-
+        OrSignInAsGuest(
+            onSignInAsGuest = onSignInAsGuest,
+            modifier = Modifier.fillMaxWidth()
+        )
     }
 }
-@Preview(name = "Welcome light theme", uiMode = UI_MODE_NIGHT_YES)
-@Preview(name = "Welcome dark theme", uiMode = UI_MODE_NIGHT_NO)
+@Preview(
+    name = "Welcome light theme",
+    uiMode = UI_MODE_NIGHT_YES,
+    widthDp = 300,
+    heightDp = 400
+)
+@Preview(
+    name = "Welcome dark theme",
+    uiMode = UI_MODE_NIGHT_NO,
+    widthDp = 300,
+    heightDp = 400
+)
 @Composable
 fun WelcomeScreenPreview() {
     JetsurveyTheme {

@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.jetsurvey.Destination.SIGN_IN_ROUTE
 import com.example.jetsurvey.Destination.SIGN_UP_ROUTE
+import com.example.jetsurvey.Destination.SURVEY_ROUTE
 import com.example.jetsurvey.Destination.WELCOME_ROUTE
 import com.example.jetsurvey.signinsignup.SignInRoute
 import com.example.jetsurvey.signinsignup.SignUpRoute
@@ -17,6 +18,8 @@ object Destination {
     const val SIGN_UP_ROUTE = "signup/{email}"
     const val SIGN_IN_ROUTE = "signin/{email}"
     const val SURVEY_ROUTE = "survey"
+    const val SURVEY_RESULTS_ROUTE = "surveyresults"
+
 
 }
 
@@ -37,13 +40,21 @@ fun JetsurveyNavHost(
                     navController.navigate("signup/$it")
                 },
                 onSignInAsGuest = {
-                    navController.navigate("signup/$it")
+                    navController.navigate(SURVEY_ROUTE)
                 },
             )
         }
 
         composable(SIGN_IN_ROUTE) {
-            SignInRoute()
+            val startingEmail = it.arguments?.getString("email")
+            SignInRoute(
+                email = startingEmail,
+                onSignInSubmitted = {
+                    navController.navigate(SURVEY_ROUTE)
+                },
+                onSignInAsGuest = { navController.navigate(SURVEY_ROUTE)},
+                onNavUp = navController::navigateUp
+            )
         }
 
         composable(SIGN_UP_ROUTE) {

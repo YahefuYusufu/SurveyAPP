@@ -1,4 +1,8 @@
 package com.example.jetsurvey.survey
 
-class SurveyRoute {
+import androidx.compose.runtime.Composable
+
+@Composable
+fun SurveyRoute() {
+    SurveyQuestionsScreen()
 }
